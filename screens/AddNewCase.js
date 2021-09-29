@@ -44,7 +44,6 @@ const AddNewScreen = ({ navigation }) => {
 	};
 
 	const onSubmitHandler = async () => {
-		console.log("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
 		const currentDate = new Date()
 		setError("");
 		if (!isObjEmpty(casesInput) || !isObjEmpty(courtsInput)) {
