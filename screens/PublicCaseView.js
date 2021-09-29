@@ -11,7 +11,7 @@ import { AuthContext } from "../shared/context/auth-context";
 import { useSupabaseClient } from "../shared/hooks/supabase-hook";
 import { isObjEmpty } from "../shared/utils/functions";
 
-const CaseView = ({ navigation, route }) => {
+const PublicCaseView = ({ navigation, route }) => {
 	const auth = useContext(AuthContext);
 	const { isLoading, runQuery, error, setError } = useSupabaseClient();
 	const caseId = route?.params?.case_id;
@@ -25,11 +25,8 @@ const CaseView = ({ navigation, route }) => {
 	const [adjournInput, setAdjournInput] = useState(adjournDateInput);
 	const [adjournError, setAdjournError] = useState("");
 	const [adjournModal, setAdjournModal] = useState(false);
-	const [disposeErr, setDisposeErr] = useState("");
-	const [disposeCaseModal, setDisposeCaseModal] = useState(false);
 	const [caseData, setCaseData] = useState({});
 	const [adjournDates, setAdjournDates] = useState([]);
-	const [lawyerInfo, setLawyerInfo] = useState();
 
 	const onChange = (event, selectedDate) => {
 		setAdjournInput({ ...adjournInput, date: selectedDate });
@@ -41,23 +38,9 @@ const CaseView = ({ navigation, route }) => {
 				supabase
 					.from("Cases")
 					.select("*, court_id(name, address)")
-					.eq("id", caseId)
+					.eq("id", caseId),
 			);
 			setCaseData(res[0]);
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
-	const getLawyerInfo = async () => {
-		try {
-			const res = await runQuery(
-				supabase
-					.from("CasesVLawyers")
-					.select("lawyer_id(name, email)")
-					.eq("case_id", caseId),
-			);
-			setLawyerInfo(res[0].lawyer_id);
 		} catch (err) {
 			console.log(err);
 		}
@@ -99,7 +82,7 @@ const CaseView = ({ navigation, route }) => {
 				.select("*")
 				.eq("case_id", caseId)
 				.order("date", { ascending: false });
-			// console.log(res.data);
+			console.log(res.data);
 			setAdjournDates(res.data);
 		} catch (err) {
 			console.log(err);
@@ -109,12 +92,11 @@ const CaseView = ({ navigation, route }) => {
 	useEffect(() => {
 		getCaseDataApi();
 		getAdjournDatesApi();
-		getLawyerInfo();
 	}, [caseId]);
 
 	return (
 		<ListViewBg
-			title="Case View"
+			title="Case Detail"
 			loading={isLoading}
 			back={() => navigation.goBack()}
 		>
@@ -136,22 +118,6 @@ const CaseView = ({ navigation, route }) => {
 					{caseData?.case_type}
 				</Text>
 			</View>
-			{accessType === 0 && (
-				<View style={innerStyles.titleSection2}>
-					<Text
-						style={[
-							textStyles.h2,
-							textStyles.bold,
-							textStyles.center,
-						]}
-					>
-						{lawyerInfo?.name}
-					</Text>
-					<Text style={[textStyles.h5, textStyles.center]}>
-						{lawyerInfo?.email}
-					</Text>
-				</View>
-			)}
 			<View style={innerStyles.content}>
 				<Text style={[textStyles.h5, textStyles.bold]}>On Behalf:</Text>
 				<Text style={textStyles.h3}>{caseData?.on_behalf}</Text>
@@ -182,7 +148,7 @@ const CaseView = ({ navigation, route }) => {
 					)}
 				/>
 			</View>
-			{accessType === 1 && (
+			{/* {accessType === 1 && (
 				<View style={innerStyles.buttons}>
 					<Button
 						title="Add Client"
@@ -191,36 +157,29 @@ const CaseView = ({ navigation, route }) => {
 							navigation.navigate("AddClient", { caseId })
 						}
 					/>
-					{/* <Button
+					<Button
 						title="Add Lawyer"
 						style={innerStyles.btn}
 						onPress={() =>
 							navigation.navigate("AddLawyer", { caseId })
 						}
-					/> */}
+					/>
 					<Button
-						title="Generate &amp; Send Token"
+						title="Send Token"
 						style={innerStyles.btn}
 						onPress={() =>
 							navigation.navigate("GenerateToken", { caseId })
 						}
 					/>
 				</View>
-			)}
-			{accessType !== 0 && (
-				<View style={innerStyles.buttons}>
-					<Button
-						title="Add Adjourn Date"
-						style={innerStyles.btn}
-						onPress={() => setAdjournModal((prevMode) => !prevMode)}
-					/>
-					{/* <Button
-						title="Dispose Case"
-						style={innerStyles.btn}
-						onPress={() => setDisposeCaseModal(true)}
-					/> */}
-				</View>
-			)}
+			)} */}
+			{/* <View style={innerStyles.buttons}>
+				<Button
+					title="Add Adjourn Date"
+					style={innerStyles.btn}
+					onPress={() => setAdjournModal((prevMode) => !prevMode)}
+				/>
+			</View> */}
 
 			<Modal
 				animationType="slide"
@@ -284,44 +243,6 @@ const CaseView = ({ navigation, route }) => {
 					</View>
 				</View>
 			</Modal>
-
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={disposeCaseModal}
-			>
-				<View style={innerStyles.centeredView}>
-					<View style={innerStyles.modalView}>
-						<Text style={innerStyles.modalText}>
-							Are you sure you want to dispose this case?
-						</Text>
-						{!!disposeErr && (
-							<Text
-								style={[
-									textStyles.red,
-									textStyles.h5,
-									styles.mb1,
-								]}
-							>
-								{disposeErr}
-							</Text>
-						)}
-						<View style={innerStyles.modalBtns}>
-							<Button
-								title="Close"
-								style={innerStyles.modalBtn}
-								onPress={() => setDisposeCaseModal(false)}
-							/>
-							<Button
-								title="Dispose"
-								loading={isLoading}
-								style={innerStyles.modalBtn}
-								onPress={submitAdjournDateApi}
-							/>
-						</View>
-					</View>
-				</View>
-			</Modal>
 		</ListViewBg>
 	);
 };
@@ -342,11 +263,6 @@ const innerStyles = StyleSheet.create({
 		shadowRadius: 8,
 		elevation: 5,
 	},
-	centeredView: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
 	textStyle: {
 		color: "white",
 		fontWeight: "bold",
@@ -365,11 +281,6 @@ const innerStyles = StyleSheet.create({
 	titleSection: {
 		paddingVertical: 20,
 		backgroundColor: "#9fd3ef",
-	},
-	titleSection2: {
-		paddingVertical: 20,
-		backgroundColor: "#9fd3ef",
-		marginTop: 10,
 	},
 	buttons: {
 		flexDirection: "row",
@@ -390,6 +301,11 @@ const innerStyles = StyleSheet.create({
 		borderBottomWidth: 2,
 		borderColor: "grey",
 	},
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
 	datePicker: {
 		width: 100,
 		marginTop: 10,
@@ -408,4 +324,4 @@ const innerStyles = StyleSheet.create({
 	},
 });
 
-export default CaseView;
+export default PublicCaseView;

@@ -1,26 +1,21 @@
 import React, { useContext } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { supabase } from "../constants/supabase";
 
+import { supabase } from "../constants/supabase";
 import { AuthContext } from "../shared/context/auth-context";
 import DashboardBg from "../shared/components/DashboardBg";
 import { styles } from "../shared/styles/styles";
 import { textStyles } from "../shared/styles/text";
+import { useSupabaseClient } from "../shared/hooks/supabase-hook";
 
 const DashboardScreen = ({ navigation }) => {
 	const auth = useContext(AuthContext);
+	const { isLoading, runQuery, error, setError } = useSupabaseClient();
 
 	const getData = async () => {
-		// const { data, error } = await supabase
-		// 	.from("Users")
-		// 	.select("*")
-		// 	.eq("id", "7fc9da49-2967-4fab-9cc6-e5b2cfd3b1df");
-
-		// if (!error) {
-		// 	console.log(data);
-		// }
-
+		// const response = await runQuery(supabase.from("Users").select("*"));
+		// console.log(response)
 		console.log(auth);
 	};
 
@@ -80,7 +75,7 @@ const DashboardScreen = ({ navigation }) => {
 					<Text style={innerStyles.cardText}>Upcoming Dates</Text>
 				</TouchableOpacity>
 			</View>
-			<View style={innerStyles.dashobardRow}>
+			{/* <View style={innerStyles.dashobardRow}>
 				<TouchableOpacity
 					style={innerStyles.dashobardCard}
 					onPress={() => navigation.navigate("ClientList")}
@@ -105,7 +100,7 @@ const DashboardScreen = ({ navigation }) => {
 					/>
 					<Text style={innerStyles.cardText}>Court's List</Text>
 				</TouchableOpacity>
-			</View>
+			</View> */}
 			<View style={innerStyles.dashobardRow}>
 				<TouchableOpacity
 					style={innerStyles.dashobardCard}
@@ -118,18 +113,6 @@ const DashboardScreen = ({ navigation }) => {
 						style={innerStyles.cardIcon}
 					/>
 					<Text style={innerStyles.cardText}>All Cases</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={innerStyles.dashobardCard}
-					onPress={getData}
-				>
-					<Icon
-						name="calendar-today"
-						size={50}
-						color="#159ded"
-						style={innerStyles.cardIcon}
-					/>
-					<Text style={innerStyles.cardText}>Api</Text>
 				</TouchableOpacity>
 			</View>
 		</DashboardBg>
@@ -163,7 +146,7 @@ const DashboardScreen = ({ navigation }) => {
 				</View>
 			}
 		>
-			<View style={innerStyles.dashobardRow}>
+			{/* <View style={innerStyles.dashobardRow}>
 				<TouchableOpacity
 					style={innerStyles.dashobardCard}
 					onPress={() => navigation.navigate("UpcomingDates")}
@@ -188,11 +171,11 @@ const DashboardScreen = ({ navigation }) => {
 					/>
 					<Text style={innerStyles.cardText}>Court's List</Text>
 				</TouchableOpacity>
-			</View>
+			</View> */}
 			<View style={innerStyles.dashobardRow}>
 				<TouchableOpacity
 					style={innerStyles.dashobardCard}
-					onPress={() => navigation.navigate("AllCases")}
+					onPress={() => navigation.navigate("ClientAllCases")}
 				>
 					<Icon
 						name="list"
@@ -202,7 +185,7 @@ const DashboardScreen = ({ navigation }) => {
 					/>
 					<Text style={innerStyles.cardText}>All Cases</Text>
 				</TouchableOpacity>
-				<TouchableOpacity
+				{/* <TouchableOpacity
 					style={innerStyles.dashobardCard}
 					onPress={getData}
 				>
@@ -213,7 +196,7 @@ const DashboardScreen = ({ navigation }) => {
 						style={innerStyles.cardIcon}
 					/>
 					<Text style={innerStyles.cardText}>Api</Text>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 			</View>
 			{/* <View style={innerStyles.dashobardRow}>
 				<TouchableOpacity

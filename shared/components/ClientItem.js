@@ -5,7 +5,7 @@ const ClientItem = (props) => {
   return (
     <View style={innerStyles.listItem}>
       <Text style={innerStyles.title}>{props.title}</Text>
-      <Text style={innerStyles.count}>Number of Cases: {props.count}</Text>
+      <Text style={innerStyles.count}>{props.email}</Text>
     </View>
   );
 };

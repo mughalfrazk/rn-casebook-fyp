@@ -36,12 +36,13 @@ const ProfileScreen = ({ navigation }) => {
 				<Text style={[textStyles.h5, textStyles.bold]}>Role:</Text>
 				<Text style={textStyles.h3}>{capitalize(auth.role)}</Text>
 			</View>
-			<Button title="Logout" onPress={
-        () => {
-          auth.logout()
-          navigation.navigate("Login")
-        }
-      } />
+			<Button
+				title="Logout"
+				style={{ marginTop: 20 }}
+				onPress={() => {
+					auth.logout();
+				}}
+			/>
 		</ProfileBg>
 	);
 };

@@ -12,12 +12,15 @@ const GuestScreen = ({ navigation }) => {
 	const [error, setError] = useState("");
 
 	const getCaseData = () => {
-		if (token === "7fc9da49-2967-4fab-9cc6-e5b2cfd3b1df") {
-			setError("");
-			navigation.navigate("CaseView");
-		} else {
-			setError("No Case Found");
+		if (!token) {
+			setError("Please enter a token");
+			return;
 		}
+
+		navigation.navigate("PublicCaseView", {
+			case_id: token,
+			access_type: 0,
+		});
 	};
 
 	return (
@@ -28,6 +31,8 @@ const GuestScreen = ({ navigation }) => {
 			<Input
 				placeholder="Case Token"
 				style={textStyles.white}
+				value={setToken}
+				onChangeText={(text) => setToken(text)}
 				leftIcon={
 					<Icon
 						name="lock"

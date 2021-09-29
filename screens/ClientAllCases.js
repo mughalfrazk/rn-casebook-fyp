@@ -16,23 +16,21 @@ import { supabase } from "../constants/supabase";
 import { useSupabaseClient } from "../shared/hooks/supabase-hook";
 import { AuthContext } from "../shared/context/auth-context";
 
-const UpcomingDates = ({ navigation }) => {
+const ClientAllCases = ({ navigation }) => {
 	const auth = useContext(AuthContext);
 	const { isLoading, runQuery, error, setError } = useSupabaseClient();
 	const [casesList, setCasesList] = useState([]);
 
-	const getMyUpcomingCasesApi = async () => {
+	const getMyCasesApi = async () => {
 		try {
 			const res = await runQuery(
 				supabase
-					.from("CasesVLawyers")
-					.select("case_id(id, title, hearing_date, is_disposed), access_type, id")
-					.eq("lawyer_id", auth.uid)
-					.lt("case_id(hearing_date)", new Date())
+					.from("CasesVClients")
+					.select("case_id(id, title, hearing_date), access_type, id")
+					.eq("client_id", auth.uid)
 					.order("updated_at", { ascending: false }),
 			);
 			setError("");
-			console.log(res)
 			setCasesList(res);
 		} catch (err) {
 			console.log(err);
@@ -40,12 +38,12 @@ const UpcomingDates = ({ navigation }) => {
 	};
 
 	useEffect(() => {
-		getMyUpcomingCasesApi();
+		getMyCasesApi();
 	}, []);
 
 	return (
 		<StaticViewBg
-			title="Upcoming Cases"
+			title="All Cases"
 			loading={isLoading}
 			back={() => navigation.goBack()}
 		>
@@ -68,7 +66,7 @@ const UpcomingDates = ({ navigation }) => {
 							onPress={() =>
 								navigation.navigate("CaseView", {
 									case_id: item?.case_id?.id,
-									access_type: item?.access_type
+									access_type: item?.access_type,
 								})
 							}
 						>
@@ -101,4 +99,4 @@ const innerStyles = StyleSheet.create({
 	},
 });
 
-export default UpcomingDates;
+export default ClientAllCases;

@@ -1,6 +1,5 @@
 import React from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
 	StyleSheet,
 	View,
@@ -11,7 +10,7 @@ import {
 
 import { styles } from "../styles/styles";
 
-const ListViewBg = (props) => {
+const StaticViewBg = (props) => {
 	return (
 		<View style={innerStyles.innerScreenContainer}>
 			<View style={innerStyles.topSection}>
@@ -33,9 +32,7 @@ const ListViewBg = (props) => {
 					/>
 				)}
 			</View>
-			<KeyboardAwareScrollView style={innerStyles.scrollContainer}>
-				<View style={innerStyles.bottomSection}>{props.children}</View>
-			</KeyboardAwareScrollView>
+			{props.children}
 		</View>
 	);
 };
@@ -61,13 +58,10 @@ const innerStyles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 	},
-	bottomSection: {
-		paddingBottom: 20,
-	},
 	backIcon: {
 		paddingRight: 5,
 		paddingBottom: 7,
 	},
 });
 
-export default ListViewBg;
+export default StaticViewBg;

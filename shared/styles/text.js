@@ -5,6 +5,7 @@ export const textStyles = StyleSheet.create({
   white: { color: "white" },
   black: { color: "black" },
   yellow: { color: "yellow" },
+  red: { color: "red" },
   h1: { fontSize: 24 },
   h2: { fontSize: 22 },
   h3: { fontSize: 20 },
